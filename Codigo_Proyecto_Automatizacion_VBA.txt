@@ -1,0 +1,610 @@
+
+' NO SE AGREGAN LOS TRABAJADORES AL FINAL DEL RANGO UR CORRESPONDIENTE.
+
+Private Sub AgregarTrabajadores_Click()
+    Dim NumExpediente As Long
+    Dim ApellidoP As String
+    Dim ApellidoM As String
+    Dim Nombre As String
+    Dim UR As String
+    Dim Puesto As String
+    Dim ws As Worksheet
+    Dim URColumna As Range
+    Dim URBuscado As Range
+    Dim UltimaFila As Long
+    
+    On Error GoTo ControlErrores
+    
+    
+    
+    NumExpediente = Application.InputBox("Introduzca el Número de Expediente.", "Número de Expediente", Type:=1)
+    If NumExpediente = 0 Then Exit Sub ' Si se cancela, se interrumpe
+    
+    ' Especifica el rango donde se encuentran los UR (categorías) en la hoja "PERSONAL_ACTIVO"
+    Set ws = Worksheets("PERSONAL_ACTIVO")
+    Set URColumna = ws.Range("F:F")
+    
+    ' Verifica si el Número de Expediente ya está registrado
+    If Application.WorksheetFunction.CountIf(ws.Range("A:A"), NumExpediente) = 0 Then
+        ' Si el Número de Expediente no está registrado, procede a solicitar los demás datos
+        
+        ApellidoP = Trim(UCase(Application.InputBox("Introduzca el Apellido Paterno.", "Apellido Paterno", Type:=2)))
+        If ApellidoP = vbNullString Then Exit Sub ' Si se cancela, se interrumpe
+        
+        ApellidoM = Trim(UCase(Application.InputBox("Introduzca el Apellido Materno.", "Apellido Materno", Type:=2)))
+        If ApellidoM = vbNullString Then Exit Sub ' Si se cancela, se interrumpe
+        
+        Nombre = Trim(UCase(Application.InputBox("Introduzca el Nombre del trabajador.", "Nombre del Trabajador", Type:=2)))
+        If Nombre = vbNullString Then Exit Sub ' Si se cancela, se interrumpe
+        
+        ' Solicita al usuario ingresar el UR deseado
+        UR = InputBox("Introduce el UR deseado:")
+        If UR = vbNullString Then Exit Sub ' Si se cancela, se interrumpe
+    
+        ' Busca el UR en la columna especificada
+        Set URBuscado = URColumna.Find(UR, LookIn:=xlValues)
+    
+        ' Verifica si se encontró el UR
+        If Not URBuscado Is Nothing Then
+            ' Si se encontró el UR, obtén la fila donde se encuentra
+            UltimaFila = ws.Cells(ws.Rows.Count, "F").End(xlUp).Row + 1
+    
+            ' Inserta los datos en la fila encontrada
+            ws.Cells(UltimaFila, 1).Value = NumExpediente ' Columna A
+            ws.Cells(UltimaFila, 3).Value = ApellidoP    ' Columna C
+            ws.Cells(UltimaFila, 4).Value = ApellidoM    ' Columna D
+            ws.Cells(UltimaFila, 5).Value = Nombre       ' Columna E
+            ws.Cells(UltimaFila, 6).Value = UR           ' Columna F
+            
+            Puesto = UCase(Trim(Application.InputBox("Introduzca el Puesto del Trabajador.", "Puesto del Trabajador", Type:=2)))
+            If Puesto = vbNullString Then Exit Sub ' Si se cancela, se interrumpe
+            
+            ws.Cells(UltimaFila, 7).Value = Puesto       ' Columna G
+            MsgBox "Se agregaron los datos al personal activo."
+        Else
+            ' Si no se encontró el UR, muestra un mensaje de error
+            MsgBox "El UR no se encontró en la columna especificada."
+        End If
+    Else
+        ' Si el Número de Expediente ya está registrado, muestra un mensaje de error
+        MsgBox "El número de expediente ya se encuentra registrado"
+    End If
+    
+    
+    Exit Sub
+    
+ControlErrores:
+    MsgBox "Error: " & Err.Number & " - " & Err.Description
+End Sub
+
+Private Sub btnBM03_Click()
+
+
+Dim NumExpediete As Long
+Dim Consecutivo As Long
+Dim Nombre As String
+Dim ApellidoP As String
+Dim ApellidoM As String
+Dim UR As Long
+Dim Puesto As String
+Dim Departamento As String
+Dim wb As Workbook
+Dim wsMB As Worksheet
+Dim wsLay As Worksheet
+Dim CodUniversal As Long
+Dim Descripcion As String
+Dim Serie As Variant
+Dim Marca As Variant
+Dim CodIdentificacion As Long
+Dim Color As String
+Dim Estado As String
+Dim PGen As Byte
+Dim PEsp As Byte
+Dim Observaciones As String
+Dim Boton As Byte
+
+On Error GoTo ErrorHandler
+    Worksheets("BM03").Visible = xlSheetVisible
+    Worksheets("BM03C.I.").Visible = xlSheetVisible
+    Worksheets("APOYO").Visible = xlSheetVisible
+    Worksheets("DEPARTAMENTO").Visible = xlSheetVisible
+    
+    NumExpediente = Application.InputBox("Introduzca el número de expediente", "Número de Expediente", Type:=1)
+    Nombre = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 5, False)
+    ApellidoM = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 4, False)
+    ApellidoP = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 3, False)
+    UR = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 6, False)
+    Puesto = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 7, False)
+    Departamento = WorksheetFunction.VLookup(UR, Hoja10.Range("A1").CurrentRegion, 2, False)
+    
+    Boton = MsgBox("Desea general el BM03 de " & Nombre & " " & ApellidoP & " " & ApellidoM & "?", vbQuestion + vbYesNo, "Confirmación")
+    If Boton = 6 Then
+    
+'       Desactivar el refresco de la pantalla
+        Application.ScreenUpdating = False
+        
+    '   Crear una copia del BM03 donde poder rellenar los datos del trabajador
+        Worksheets("BM03").Copy Before:=Sheets(1)
+        ActiveSheet.Name = "BM03 (2)"
+        
+        
+        Set wsBM = ThisWorkbook.Application.Worksheets("BM03 (2)")
+        Set wsLay = ThisWorkbook.Application.Worksheets("Layout")
+    '   Insertar los encabezados del BM03 con los datos personales del trabajador
+        
+        wsBM.Range("C11") = Nombre & " " & ApellidoP & " " & ApellidoM
+        wsBM.Range("C12") = Puesto
+        wsBM.Range("C16") = NumExpediente
+        wsBM.Range("C14") = Departamento
+        
+
+        Worksheets("Layout").Select
+        For Each Fila In ActiveSheet.Range("B2:B" & ActiveSheet.Cells(ActiveSheet.Rows.Count, "B").End(xlUp).Row)
+            If Fila.Offset(0, 25) = 5310 Then 'Aqui se controlaría lo agregado el equipo medico
+
+                If Fila.Offset(0, 34).Value = NumExpediente Then
+                    ActiveSheet.Range("A" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("B1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("U" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("C1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("Y" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("D1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("V" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("E1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("C" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("F1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("X" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("G1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AC" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("H1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AA" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("I1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AB" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("J1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AN" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("K1").PasteSpecial Paste:=xlPasteValues
+
+
+                    Worksheets("APOYO").Range("B1:K1").Copy
+                    Worksheets("BM03 (2)").Range("B46:K46").PasteSpecial Paste:=xlPasteValues
+                    Worksheets("BM03 (2)").Rows(46).EntireRow.Insert Shift:=xlShiftDown
+                End If
+
+
+            ElseIf Fila.Offset(0, 25) = 5150 Or Fila.Offset(0, 25) = 5230 Then  'Aqui se controlaría lo agregado el equipo de computo
+                If Fila.Offset(0, 34).Value = NumExpediente Then
+                    ActiveSheet.Range("A" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("B1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("U" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("C1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("Y" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("D1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("V" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("E1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("C" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("F1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("X" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("G1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AC" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("H1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AA" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("I1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AB" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("J1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AN" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("K1").PasteSpecial Paste:=xlPasteValues
+
+
+                    Worksheets("APOYO").Range("B1:K1").Copy
+                    Worksheets("BM03 (2)").Range("B36:K36").PasteSpecial Paste:=xlPasteValues
+                    Worksheets("BM03 (2)").Rows(36).EntireRow.Insert Shift:=xlShiftDown
+                End If
+            End If
+
+        Next
+        For Each Fila In ActiveSheet.Range("B2:B" & ActiveSheet.Cells(ActiveSheet.Rows.Count, "B").End(xlUp).Row)
+            If Fila.Offset(0, 25) <> 5310 And Fila.Offset(0, 25) <> 5150 And Fila.Offset(0, 25) <> 5230 Then
+                If Fila.Offset(0, 34).Value = NumExpediente Then
+                    ActiveSheet.Range("A" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("B1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("U" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("C1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("Y" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("D1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("V" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("E1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("C" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("F1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("X" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("G1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AC" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("H1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AA" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("I1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AB" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("J1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AN" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("K1").PasteSpecial Paste:=xlPasteValues
+
+
+                    Worksheets("APOYO").Range("B1:K1").Copy
+                    Worksheets("BM03 (2)").Range("B23:K23").PasteSpecial Paste:=xlPasteValues
+                    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+                    Worksheets("BM03 (2)").Rows(23).EntireRow.Insert Shift:=xlShiftDown
+
+
+                End If
+
+            End If
+        Next Fila
+        
+        
+'        BM03 Control Iterno
+        Worksheets("BM03C.I.").Copy Before:=Sheets(2)
+        ActiveSheet.Name = "BM03C.I. (2)"
+        
+        Worksheets("BM03C.I. (2)").Range("C11") = Nombre & " " & ApellidoP & " " & ApellidoM
+        Worksheets("BM03C.I. (2)").Range("C12") = Puesto
+        Worksheets("BM03C.I. (2)").Range("C16") = NumExpediente
+        Worksheets("BM03C.I. (2)").Range("C14") = Departamento
+        
+        Worksheets("CONTROL_INTERNO").Select
+        For Each Fila In ActiveSheet.Range("AJ2:AJ" & ActiveSheet.Cells(ActiveSheet.Rows.Count, "AJ").End(xlUp).Row)
+            If Fila.Offset(0, -9) = 5150 Then 'Aqui se controlaría lo agregado en equipo de computo
+
+                If Fila.Offset(0, 0).Value = NumExpediente Then
+                    ActiveSheet.Range("A" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("B1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("U" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("C1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("Y" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("D1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("V" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("E1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("C" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("F1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("X" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("G1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AC" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("H1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AA" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("I1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AB" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("J1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AN" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("K1").PasteSpecial Paste:=xlPasteValues
+
+
+                    Worksheets("APOYO").Range("B1:K1").Copy
+                    Worksheets("BM03C.I. (2)").Range("B34:K34").PasteSpecial Paste:=xlPasteValues
+                    Worksheets("BM03C.I. (2)").Rows(34).EntireRow.Insert Shift:=xlShiftDown
+                End If
+                    
+               
+            ElseIf Fila.Offset(0, 0).Value = NumExpediente Then
+                    ActiveSheet.Range("A" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("B1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("U" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("C1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("Y" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("D1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("V" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("E1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("C" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("F1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("X" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("G1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AC" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("H1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AA" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("I1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AB" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("J1").PasteSpecial Paste:=xlPasteValues
+                    ActiveSheet.Range("AN" & Fila.Row).Copy
+                    Worksheets("APOYO").Range("K1").PasteSpecial Paste:=xlPasteValues
+
+
+                    Worksheets("APOYO").Range("B1:K1").Copy
+                    Worksheets("BM03C.I. (2)").Range("B23:K23").PasteSpecial Paste:=xlPasteValues
+                    Worksheets("BM03C.I. (2)").Rows(23).EntireRow.Insert Shift:=xlShiftDown
+               
+            End If
+        Next Fila
+'       Copiar las Hojas BM03 y Control Interno a un nuevo Libro
+        HojasCopiar = Array("BM03 (2)", "BM03C.I. (2)")
+        Worksheets(HojasCopiar).Move
+        Worksheets(1).Name = "BM03_" & Nombre & ApellidoP
+        Worksheets(2).Name = "BM03_CI_" & Nombre & ApellidoP
+        Application.DisplayAlerts = False
+        ActiveWorkbook.SaveAs Filename:="C:\Users\HUERTA PEREZ\Desktop\BM03_Creados\BM03_" & NumExpediente & "_" & Nombre & ApellidoP
+'        "C:\Users\HUERTA PEREZ\Desktop\BM03_Creados"
+        Workbooks("BM03_" & NumExpediente & "_" & Nombre & ApellidoP).Close SaveChanges:=True
+        Application.DisplayAlerts = True
+        
+        Worksheets("BM03").Visible = xlSheetVeryHidden
+        Worksheets("BM03C.I.").Visible = xlSheetVeryHidden
+        Worksheets("APOYO").Visible = xlSheetVeryHidden
+        Worksheets("DEPARTAMENTO").Visible = xlSheetVeryHidden
+        
+        Worksheets("DATOS").Select
+            
+'       Activar el refresco de la pantalla
+        Application.ScreenUpdating = True
+    Else
+            MsgBox "Se ha cancelado la solicitud."
+    End If
+    
+     Exit Sub
+ErrorHandler:
+    If Err.Number = 1004 Then
+        MsgBox "No ha sido posible ejecutar el proceso, verifica el número de expediente."
+    Else: MsgBox " No ha sido posible ejecutar el proceso"
+    End If
+    
+    Worksheets("BM03").Visible = xlSheetVeryHidden
+    Worksheets("BM03C.I.").Visible = xlSheetVeryHidden
+    Worksheets("APOYO").Visible = xlSheetVeryHidden
+    Worksheets("DEPARTAMENTO").Visible = xlSheetVeryHidden
+    
+    Worksheets("DATOS").Select
+End Sub
+
+
+
+Private Sub InformePersonal_Click()
+Dim NumExpediente As Long
+
+    On Error GoTo ErrorHandler
+    NumExpediente = Application.InputBox("Ingrese el número de expediente", "Numero de Expediente", Type:=1)
+    If WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 5, False) <> "" Then
+        Sheets("Layout").Select
+        ActiveSheet.Range("A1:AO10000").AutoFilter Field:=36, Criteria1:=NumExpediente
+    End If
+    Exit Sub
+    
+    
+ErrorHandler:
+    If Err.Number = 1004 Then
+        MsgBox "No se pudo llevar a cabo el informe, verificar el número de expediente"
+    Else: MsgBox "No se pudo llevar a cabo el informe, verificar el número de expediente"
+    End If
+End Sub
+
+Private Sub IngresarDatosControlInterno_Click()
+    Dim NumExpediente As Long
+    Dim Consecutivo As Long
+    Dim FilaDatos As Long
+    Dim Nombre As String
+    Dim ApellidoP As String
+    Dim ApellidoM As String
+    Dim UR As Long
+    Dim Puesto As String
+    Dim Descripcion As String
+    Dim Marca As String
+    Dim Modelo As String
+    Dim Color As String
+    Dim Serie As Variant
+    Dim Material As String
+    Dim Clasificador As Long
+    Dim EstadoF As String
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim celda As Range
+    Dim Boton As Integer
+    Dim Boton2 As Integer
+    Dim Bien As String
+    Dim Agregar As Range
+    
+    On Error GoTo ControlErrores
+    
+    ' Obtener el número de trabajador ingresado por el usuario
+    NumExpediente = Application.InputBox("Introduzca el número de expediente", "Número de Expediente", Type:=1)
+    NumExpediente = Trim(NumExpediente)
+    
+    ' Buscar el número de trabajador en la hoja de datos
+    Nombre = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 5, False)
+    ApellidoM = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 4, False)
+    ApellidoP = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 3, False)
+    UR = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 6, False)
+    
+    Boton = MsgBox("Los datos ingresados pertenecen a: " & Nombre & " " & ApellidoP & "." & vbCrLf & _
+                   "Deseas continuar?", vbQuestion + vbYesNo, "Datos Trabajador")
+    
+    If Boton = 6 Then
+        Descripcion = UCase(Trim(Application.InputBox("Intruduzca el Tipo de Bien", "Tipo de Bien", Type:=2)))
+        Marca = UCase(Trim(Application.InputBox("Introduzca la marca del Bien", "Marca", Type:=2)))
+        Modelo = UCase(Trim(Application.InputBox("Introduzca el modelo del bien" & vbCrLf & "Deje en blanco si no aplica", "Modelo", Type:=2)))
+        Color = UCase(Trim(Application.InputBox("Introduzca el color del bien", "Color del bien", Type:=2)))
+        Serie = UCase(Trim(Application.InputBox("Introduzca el número de serie del bien", "Número de serie")))
+        Material = UCase(Trim(Application.InputBox("Introduzca el tipo de material del bien", "Material", Type:=2)))
+        Clasificador = UCase(Trim(Application.InputBox("Introduzca el Objeto Clasificador del bien" & vbCrLf & "Bienes General: 5110" & vbCrLf & "Equipo de Computo: 5150" & vbCrLf & "Equipo Médico: 5310", "Objeto Clasificador", Type:=1)))
+        EstadoF = UCase(Trim(Application.InputBox("Introduzca el estado físico del bien:" & vbCrLf & "Bueno, Regular, Malo", "Estado físico del bien", Type:=2)))
+    End If
+    
+    Set ws = ThisWorkbook.Worksheets("CONTROL_INTERNO")
+    ws.Activate
+    
+    Set Agregar = ws.Range("$U$1").End(xlDown).Offset(1, 0)
+    
+    Application.ScreenUpdating = False
+    
+    Agregar.Offset(0, 0) = Descripcion
+    Agregar.Offset(0, 1) = Marca
+    Agregar.Offset(0, 2) = Modelo
+    Agregar.Offset(0, 3) = Color
+    Agregar.Offset(0, 4) = Serie
+    Agregar.Offset(0, 5) = Material
+    Agregar.Offset(0, 6) = Clasificador
+    Agregar.Offset(0, 7) = Clasificador + 1
+    Agregar.Offset(0, 8) = EstadoF
+    Agregar.Offset(0, 12) = UR
+    Agregar.Offset(0, 15) = NumExpediente
+    Agregar.Offset(0, 16) = Nombre
+    Agregar.Offset(0, 17) = ApellidoP
+    Agregar.Offset(0, 18) = ApellidoM
+    Agregar.Offset(0, 20).Value = Date
+    
+    Application.ScreenUpdating = True
+    
+     Worksheets("DATOS").Select
+    Exit Sub
+    
+    
+ControlErrores:
+    If Err.Number = 1004 Then
+        MsgBox "Se ha cancelado el proceso", vbInformation
+    ElseIf Err.Number = 0 Then
+        MsgBox "Volver a ingresar los datos", vbInformation
+    Else
+        MsgBox "Se ha producido un error." & vbCrLf & "Código: " & Err.Number & vbCrLf & "Descripción: " & Err.Description, vbInformation
+    End If
+    Worksheets("DATOS").Select
+End Sub
+
+Private Sub BajaTrabajadores_Click()
+
+Dim NumExpediente As Long
+Dim Nombre As String
+Dim ApellidoP As String
+Dim ApellidoM As String
+Dim Boton As Long
+Dim Range As Range
+Dim celda As Range
+Dim ws As Worksheet
+
+    On Error GoTo ControlErrores
+    NumExpediente = Application.InputBox("Introduzca el Número de Expediente", "Número de expediente", Type:=1)
+    If WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 5, False) <> "" Then
+        Nombre = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 5, False)
+        ApellidoM = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 4, False)
+        ApellidoP = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 3, False)
+        
+        Boton = MsgBox("Deseas dar de baja a: " & Nombre & " " & ApellidoP & " " & ApellidoM, vbInformation + vbYesNo + vbDefaultButton2, "Dar de Baja")
+        Set ws = ThisWorkbook.Worksheets("PERSONAL_ACTIVO")
+    '    Set ws = ThisWorkbook.Worksheets("Layout")
+    
+        If Boton = vbYes Then
+            Application.DisplayAlerts = False
+            Application.ScreenUpdating = False
+            For Each celda In ws.Range("A2", ws.Range("A2").End(xlDown))
+                If celda = NumExpediente Then
+                    celda.EntireRow.Delete
+                End If
+            Next
+        Else: Exit Sub
+            Application.DisplayAlerts = True
+        End If
+        Exit Sub
+    Else: MsgBox "No ha sido posible encontrar el número de expediente, revisa el npumero ingresado."
+        Exit Sub
+    End If
+    
+    
+ControlErrores:
+    If Err.Number = 1004 Then
+        MsgBox "El proceso no se puede ejecutar, error: " & Err.Number & "."
+    Else:
+        MsgBox "Se interrumpio el proceso"
+    End If
+    
+End Sub
+
+Private Sub IngresarDatos_Click()
+    
+Dim NumExpediente As Long
+Dim Consecutivo As Long
+Dim FilaDatos As Long
+Dim Nombre As String
+Dim ApellidoP As String
+Dim ApellidoM As String
+Dim UR As Long
+Dim Puesto As String
+Dim wb As Workbook
+Dim ws As Worksheet
+Dim celda As Range
+Dim Boton As Integer
+Dim Boton2 As Integer
+Dim Boton3 As Integer
+Dim Bien As String
+
+    On Error GoTo ControlErrores
+    ' Obtener el número de trabajador ingresado por el usuario
+    NumExpediente = Application.InputBox("Introduzca el número de expediente", "Número de Expediente", Type:=1)
+    NumExpediente = Trim(NumExpediente)
+    
+
+    ' Buscar el número de trabajador en la hoja de datos
+    
+    Nombre = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 5, False)
+    ApellidoM = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 4, False)
+    ApellidoP = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 3, False)
+    UR = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 6, False)
+    Puesto = WorksheetFunction.VLookup(NumExpediente, Hoja5.Range("A:G"), 7, False)
+    
+    Boton = MsgBox("Los datos ingresados pertenecen a: " & Nombre & " " & ApellidoP & "." & vbCrLf _
+    & "Deseas continuar?", vbQuestion + vbYesNo, "Datos Trabajador")
+    
+    If Boton = 6 Then
+'       Range("A5") = Nombre
+'       Range("B5") = ApellidoP
+'       Range("C5") = ApellidoM
+'       Range("D5") = UR
+'       Range("E5") = Puesto
+'       Range("F5") = NumExpediente
+    
+        Consecutivo = Application.InputBox("Introduzca el número Consecutivo", "Número Consecutivo", Type:=1)
+        
+        Do Until Consecutivo = 0
+'            Consecutivo = Application.InputBox("Introduzca el número Consecutivo", "Número Consecutivo", Type:=1)
+            
+            If Consecutivo = "0" Then Exit Do
+            
+            ' Rellenar la Hoja Layout con los datos del Trabajador
+            Application.ScreenUpdating = False
+            
+            Set ws = ThisWorkbook.Worksheets("Layout")
+            
+            For Each celda In ws.Range("B:B")
+                If celda.Value = Consecutivo And Consecutivo <> 0 Then
+                    Bien = celda.Offset(0, 19)
+                    Boton2 = MsgBox("El bien " & Consecutivo & " es: " & Bien & vbCrLf & "Deseas continuar?", vbQuestion + vbYesNo, "Nombre del bien")
+                    If Boton2 = 6 Then
+                        If celda.Offset(0, 34).Value <> "" Then
+                            Boton3 = MsgBox("El " & Bien & " ha sido asignado previamente a " & celda.Offset(0, 35) & " " & celda.Offset(0, 36) & "." & vbCrLf & "Deseas sobreescribir los datos?", vbQuestion + vbYesNo + vbDefaultButton2, "Bien Previamente Asignado")
+                            If Boton3 = 6 Then
+                                celda.Offset(0, 35) = Nombre
+                                celda.Offset(0, 37) = ApellidoM
+                                celda.Offset(0, 36) = ApellidoP
+                                celda.Offset(0, 34) = NumExpediente
+                                celda.Offset(0, 39).Value = Date
+                                
+                            Else: End If
+                        Else
+                        celda.Offset(0, 35) = Nombre
+                        celda.Offset(0, 37) = ApellidoM
+                        celda.Offset(0, 36) = ApellidoP
+                        celda.Offset(0, 34) = NumExpediente
+                        celda.Offset(0, 39).Value = Date
+                        Application.ScreenUpdating = True
+                        End If
+                    End If
+                End If
+            Next celda
+            
+            Consecutivo = Application.InputBox("Introduzca el número Consecutivo", "Número Consecutivo", Type:=1)
+        Loop
+         
+    ElseIf Boton = 7 Or Boton = 2 Then
+       End If
+       Exit Sub
+            
+ControlErrores:
+    If Err.Number = 1004 Then
+        MsgBox "Se ha cancelado el proceso", vbInformation
+    ElseIf Err.Number = 0 Then
+        MsgBox "Volver a ingresar los datos", vbInformation
+    Else
+        MsgBox "Se ha producido un error." & vbCrLf & "Código: " & Err.Number & vbCrLf & "Descripción: " & Err.Description, vbInformation
+    End If
+    
+End Sub
