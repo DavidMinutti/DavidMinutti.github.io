@@ -1,6 +1,5 @@
 
-' NO SE AGREGAN LOS TRABAJADORES AL FINAL DEL RANGO UR CORRESPONDIENTE.
-
+' 
 Private Sub AgregarTrabajadores_Click()
     Dim NumExpediente As Long
     Dim ApellidoP As String
