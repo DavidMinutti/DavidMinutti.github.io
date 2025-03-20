@@ -1,0 +1,594 @@
+Private Sub cmdExtraerCedula_Click()
+
+Application.ScreenUpdating = False
+Application.Calculation = xlCalculationManual
+Application.EnableEvents = False
+
+
+Dim LibroOriginal As Workbook
+    Dim LibroNuevo As Workbook
+    Dim HojaCopiada As Worksheet
+    Dim NombreArchivo As String
+    Dim RutaGuardado As String
+    Dim UltimaFilaDatos As Long
+    Dim Hoja As Worksheet
+    Dim RangoSeleccionado As Range
+    Dim UltimaFilaConDatos As Long
+    Dim PrimeraFila As Byte
+
+    Set LibroOriginal = ThisWorkbook
+    Set HojaCopiada = LibroOriginal.Sheets(2)
+    HojaCopiada.Copy ' Esto crea un nuevo libro automáticamente y coloca la hoja copiada en él
+    Set LibroNuevo = ActiveWorkbook
+    NombreArchivo = InputBox("Introduce el nombre para guardar el nuevo archivo (sin la extensión):", "Nombre del archivo")
+     
+    
+     
+    If NombreArchivo = "" Then
+        LibroNuevo.Close SaveChanges:=False
+        
+        
+        Application.ScreenUpdating = True
+        Application.Calculation = xlCalculationAutomatic
+        Application.EnableEvents = True
+        
+        Exit Sub 
+      End If
+      
+      
+    If NombreArchivo <> "" Then
+        RutaGuardado = "C:\Ruta\" & NombreArchivo & ".xlsx"
+        
+        
+        If RutaGuardado <> "" Then
+            LibroNuevo.SaveAs RutaGuardado
+'            MsgBox "El archivo se ha guardado como: " & NombreArchivo & ".xlsx en la ruta: " & RutaGuardado
+        Else
+            MsgBox "No se proporcionó una ruta de guardado válida. El archivo no se guardó."
+        End If
+    Else
+        MsgBox "No se proporcionó un nombre de archivo. El archivo no se guardó."
+    End If
+    
+   Set LibroOriginal = ThisWorkbook
+    UltimaFilaConDatos = LibroOriginal.Worksheets(2).Range("A15").End(xlDown).Row
+    PrimeraFila = 15
+    Set RangoSeleccionado = LibroOriginal.Worksheets(2).Range("A15:A" & UltimaFilaConDatos)
+    
+    If UltimaFilaConDatos <= 14 Or UltimaFilaConDatos > 750 Or UltimaFilaConDatos = 25 Then
+        MsgBox "Revisar datos de cedula"
+    Else
+        RangoSeleccionado.EntireRow.Delete
+    End If
+    
+    LibroNuevo.Close SaveChanges:=False
+    
+
+Application.ScreenUpdating = True
+Application.Calculation = xlCalculationAutomatic
+Application.EnableEvents = True
+
+End Sub
+
+
+
+
+
+Private Sub cmdSubirCelula_Click()
+
+Application.ScreenUpdating = False
+Application.Calculation = xlCalculationManual
+Application.EnableEvents = False
+
+
+
+Dim Num As Byte
+Dim Num_Obra As String
+Dim Residente_Obra As String
+Dim Nombre_Obra As String
+Dim Modalidad_Adj As String
+Dim Tipo_Contrato As String
+Dim Programa As String
+Dim Recurso_Fondo As String
+Dim Ejercicio_Anio As Integer
+Dim Num_Contrato As String
+Dim Contratista As String
+Dim Fecha As String
+Dim Representante As String
+Dim Monto_Contrato As Long
+Dim Monto_Convenio As Long
+Dim Monto_Total As Long
+Dim Periodo_Ejecucion1 As String
+Dim Periodo_Ejecucion2 As String
+Dim Periodo_Diferido1 As String
+Dim Periodo_Diferido2 As String
+Dim Dias_Diferido As String
+Dim NumeroIndice As Integer
+
+Dim V1 As String
+Dim V2 As String
+Dim V3 As String
+Dim V4 As String
+Dim V5 As String
+Dim V6 As String
+Dim V7 As String
+Dim V8 As String
+Dim V9 As String
+Dim V10 As String
+Dim V11 As String
+Dim V12 As String
+Dim V13 As String
+Dim V14 As String
+Dim V15 As String
+Dim V16 As String
+Dim V17 As String
+Dim V18 As String
+Dim V19 As String
+Dim V20 As String
+Dim V21 As String
+Dim V22 As String
+Dim V23 As String
+Dim V24 As String
+Dim V25 As String
+Dim V26 As String
+Dim V27 As String
+Dim V28 As String
+Dim V29 As String
+Dim V30 As String
+Dim V31 As String
+Dim V32 As String
+Dim V33 As String
+Dim V34 As String
+Dim V35 As String
+Dim V36 As String
+Dim V37 As String
+Dim V38 As String
+Dim V39 As String
+Dim V40 As String
+Dim V41 As String
+Dim V42 As String
+Dim V43 As String
+Dim V44 As String
+Dim V45 As String
+Dim V46 As String
+Dim V47 As String
+Dim V48 As String
+Dim V49 As String
+Dim V50 As String
+Dim V51 As String
+Dim V52 As String
+Dim V53 As String
+Dim V54 As String
+Dim V55 As String
+Dim V56 As String
+Dim V57 As String
+Dim V58 As String
+Dim V59 As String
+Dim V60 As String
+Dim V61 As String
+Dim V62 As String
+Dim V63 As String
+Dim V64 As String
+Dim V65 As String
+Dim V66 As String
+Dim V67 As String
+Dim V68 As String
+Dim V69 As String
+Dim V70 As String
+Dim V71 As String
+Dim V72 As String
+Dim V73 As String
+Dim V74 As String
+Dim V75 As String
+Dim V76 As String
+Dim V77 As String
+Dim V78 As String
+Dim V79 As String
+Dim V80 As String
+Dim V81 As String
+Dim V82 As String
+Dim V83 As String
+Dim V84 As String
+Dim V85 As String
+Dim V86 As String
+Dim V87 As String
+Dim V88 As String
+Dim V89 As String
+Dim V90 As String
+Dim V91 As String
+Dim V92 As String
+Dim V93 As String
+Dim V94 As String
+Dim V95 As String
+Dim V96 As String
+Dim V97 As String
+Dim V98 As String
+Dim V99 As String
+Dim V100 As String
+Dim V101 As String
+Dim V102 As String
+Dim V103 As String
+Dim V104 As String
+Dim V105 As String
+Dim V106 As String
+Dim V107 As String
+Dim V108 As String
+Dim V109 As String
+Dim V110 As String
+Dim V111 As String
+Dim V112 As String
+Dim V113 As String
+Dim V114 As String
+Dim V115 As String
+Dim V116 As String
+
+
+
+
+Dim RutaCarpeta As String
+Dim Archivo As String
+Dim LibroCedula As Workbook
+Dim LibroOriginal As Workbook
+
+Dim CeldaEncontrada As Range
+Dim FilaIndice As Long
+Dim UltimaFilaConDatos As Long
+
+
+On Error GoTo ErrorHandler
+
+
+
+   RutaCarpeta = "C:\Ruta\"
+   Archivo = Dir(RutaCarpeta & "*.xlsx")
+
+    
+    If Archivo <> "" Then
+        Set LibroCedula = Workbooks.Open(RutaCarpeta & Archivo)
+        Set LibroOriginal = ThisWorkbook
+        UltimaFilaConDatos = LibroOriginal.Worksheets(2).Cells(Rows.Count, 2).End(xlUp).Row
+        
+        
+        
+        
+
+    Num_Obra = UCase(Trim(CStr(LibroCedula.Sheets("CEDULA").Range("F6").Value)))
+    Residente_Obra = LibroCedula.Sheets("CEDULA").Range("J148").Value
+    Nombre_Obra = LibroCedula.Sheets("CEDULA").Range("F8").Value
+    Modalidad_Adj = LibroCedula.Sheets("CEDULA").Range("F9").Value
+    Tipo_Contrato = LibroCedula.Sheets("CEDULA").Range("F10").Value
+    Programa = LibroCedula.Sheets("CEDULA").Range("F11").Value
+    Recurso_Fondo = LibroCedula.Sheets("CEDULA").Range("F12").Value
+    Ejercicio_Anio = LibroCedula.Sheets("CEDULA").Range("F13").Value
+    Num_Contrato = LibroCedula.Sheets("CEDULA").Range("F14").Value
+    Contratista = LibroCedula.Sheets("CEDULA").Range("F15").Value
+    Fecha = LibroCedula.Sheets("CEDULA").Range("F16").Value
+    Representante = LibroCedula.Sheets("CEDULA").Range("F17").Value
+    Monto_Contrato = LibroCedula.Sheets("CEDULA").Range("F18").Value
+    Monto_Convenio = LibroCedula.Sheets("CEDULA").Range("F19").Value
+    Monto_Total = LibroCedula.Sheets("CEDULA").Range("F20").Value
+    Periodo_Ejecucion1 = LibroCedula.Sheets("CEDULA").Range("H21").Value
+    Periodo_Ejecucion2 = LibroCedula.Sheets("CEDULA").Range("L21").Value
+    Periodo_Diferido1 = LibroCedula.Sheets("CEDULA").Range("H22").Value
+    Periodo_Diferido2 = LibroCedula.Sheets("CEDULA").Range("L22").Value
+    Dias_Diferido = LibroCedula.Sheets("CEDULA").Range("P22").Value
+
+    
+    V1 = LibroCedula.Sheets("CEDULA").Range("P28").Value
+    V2 = LibroCedula.Sheets("CEDULA").Range("P29").Value
+    V3 = LibroCedula.Sheets("CEDULA").Range("P32").Value
+    V4 = LibroCedula.Sheets("CEDULA").Range("P33").Value
+    V5 = LibroCedula.Sheets("CEDULA").Range("P36").Value
+    V6 = LibroCedula.Sheets("CEDULA").Range("P40").Value
+    V7 = LibroCedula.Sheets("CEDULA").Range("P41").Value
+    V8 = LibroCedula.Sheets("CEDULA").Range("P42").Value
+    V9 = LibroCedula.Sheets("CEDULA").Range("P43").Value
+    V10 = LibroCedula.Sheets("CEDULA").Range("P44").Value
+    V11 = LibroCedula.Sheets("CEDULA").Range("P45").Value
+    V12 = LibroCedula.Sheets("CEDULA").Range("P46").Value
+    V13 = LibroCedula.Sheets("CEDULA").Range("P48").Value
+    V14 = LibroCedula.Sheets("CEDULA").Range("P49").Value
+    V15 = LibroCedula.Sheets("CEDULA").Range("P50").Value
+    V16 = LibroCedula.Sheets("CEDULA").Range("P51").Value
+    V17 = LibroCedula.Sheets("CEDULA").Range("P52").Value
+    V18 = LibroCedula.Sheets("CEDULA").Range("P53").Value
+    V19 = LibroCedula.Sheets("CEDULA").Range("P54").Value
+    V20 = LibroCedula.Sheets("CEDULA").Range("P55").Value
+    V21 = LibroCedula.Sheets("CEDULA").Range("P56").Value
+    V22 = LibroCedula.Sheets("CEDULA").Range("P58").Value
+    V23 = LibroCedula.Sheets("CEDULA").Range("P59").Value
+    V24 = LibroCedula.Sheets("CEDULA").Range("P60").Value
+    V25 = LibroCedula.Sheets("CEDULA").Range("P61").Value
+    V26 = LibroCedula.Sheets("CEDULA").Range("P62").Value
+    V27 = LibroCedula.Sheets("CEDULA").Range("P63").Value
+    V28 = LibroCedula.Sheets("CEDULA").Range("P64").Value
+    V29 = LibroCedula.Sheets("CEDULA").Range("P65").Value
+    V30 = LibroCedula.Sheets("CEDULA").Range("P66").Value
+    V31 = LibroCedula.Sheets("CEDULA").Range("P67").Value
+    V32 = LibroCedula.Sheets("CEDULA").Range("P70").Value
+    V33 = LibroCedula.Sheets("CEDULA").Range("P73").Value
+    V34 = LibroCedula.Sheets("CEDULA").Range("P74").Value
+    V35 = LibroCedula.Sheets("CEDULA").Range("P75").Value
+    V36 = LibroCedula.Sheets("CEDULA").Range("P76").Value
+    V37 = LibroCedula.Sheets("CEDULA").Range("P77").Value
+    V38 = LibroCedula.Sheets("CEDULA").Range("P78").Value
+    V39 = LibroCedula.Sheets("CEDULA").Range("P79").Value
+    V40 = LibroCedula.Sheets("CEDULA").Range("P81").Value
+    V41 = LibroCedula.Sheets("CEDULA").Range("P84").Value
+    V42 = LibroCedula.Sheets("CEDULA").Range("P87").Value
+    V43 = LibroCedula.Sheets("CEDULA").Range("P89").Value
+    V44 = LibroCedula.Sheets("CEDULA").Range("P90").Value
+    V45 = LibroCedula.Sheets("CEDULA").Range("P91").Value
+    V46 = LibroCedula.Sheets("CEDULA").Range("P92").Value
+    V47 = LibroCedula.Sheets("CEDULA").Range("P93").Value
+    V48 = LibroCedula.Sheets("CEDULA").Range("P94").Value
+    V49 = LibroCedula.Sheets("CEDULA").Range("P95").Value
+    V50 = LibroCedula.Sheets("CEDULA").Range("P98").Value
+    V51 = LibroCedula.Sheets("CEDULA").Range("P99").Value
+    V52 = LibroCedula.Sheets("CEDULA").Range("P100").Value
+    V53 = LibroCedula.Sheets("CEDULA").Range("P101").Value
+    V54 = LibroCedula.Sheets("CEDULA").Range("P102").Value
+    V55 = LibroCedula.Sheets("CEDULA").Range("P103").Value
+    V56 = LibroCedula.Sheets("CEDULA").Range("P104").Value
+    V57 = LibroCedula.Sheets("CEDULA").Range("P105").Value
+    V58 = LibroCedula.Sheets("CEDULA").Range("P106").Value
+    V59 = LibroCedula.Sheets("CEDULA").Range("P107").Value
+    V60 = LibroCedula.Sheets("CEDULA").Range("P108").Value
+    V61 = LibroCedula.Sheets("CEDULA").Range("P110").Value
+    V62 = LibroCedula.Sheets("CEDULA").Range("P111").Value
+    V63 = LibroCedula.Sheets("CEDULA").Range("P112").Value
+    V64 = LibroCedula.Sheets("CEDULA").Range("P113").Value
+    V65 = LibroCedula.Sheets("CEDULA").Range("P114").Value
+    V66 = LibroCedula.Sheets("CEDULA").Range("P115").Value
+    V67 = LibroCedula.Sheets("CEDULA").Range("P116").Value
+    V68 = LibroCedula.Sheets("CEDULA").Range("P117").Value
+    V69 = LibroCedula.Sheets("CEDULA").Range("P118").Value
+    V70 = LibroCedula.Sheets("CEDULA").Range("P119").Value
+    V71 = LibroCedula.Sheets("CEDULA").Range("P120").Value
+    V72 = LibroCedula.Sheets("CEDULA").Range("P121").Value
+    V73 = LibroCedula.Sheets("CEDULA").Range("P122").Value
+    V74 = LibroCedula.Sheets("CEDULA").Range("P123").Value
+    V75 = LibroCedula.Sheets("CEDULA").Range("P124").Value
+    V76 = LibroCedula.Sheets("CEDULA").Range("P127").Value
+    V77 = LibroCedula.Sheets("CEDULA").Range("P130").Value
+    V78 = LibroCedula.Sheets("CEDULA").Range("P134").Value
+    V79 = LibroCedula.Sheets("CEDULA").Range("P138").Value
+    V80 = LibroCedula.Sheets("CEDULA").Range("P142").Value
+    V81 = LibroCedula.Sheets("CEDULA").Range("P147").Value
+    V82 = LibroCedula.Sheets("CEDULA").Range("P151").Value
+    V83 = LibroCedula.Sheets("CEDULA").Range("P155").Value
+    V84 = LibroCedula.Sheets("CEDULA").Range("P156").Value
+    V85 = LibroCedula.Sheets("CEDULA").Range("P158").Value
+    V86 = LibroCedula.Sheets("CEDULA").Range("P159").Value
+    V87 = LibroCedula.Sheets("CEDULA").Range("P160").Value
+    V88 = LibroCedula.Sheets("CEDULA").Range("P161").Value
+    V89 = LibroCedula.Sheets("CEDULA").Range("P162").Value
+    V90 = LibroCedula.Sheets("CEDULA").Range("P163").Value
+    V91 = LibroCedula.Sheets("CEDULA").Range("P164").Value
+    V92 = LibroCedula.Sheets("CEDULA").Range("P165").Value
+    V93 = LibroCedula.Sheets("CEDULA").Range("P166").Value
+    V94 = LibroCedula.Sheets("CEDULA").Range("P167").Value
+    V95 = LibroCedula.Sheets("CEDULA").Range("P168").Value
+    V96 = LibroCedula.Sheets("CEDULA").Range("P170").Value
+    V97 = LibroCedula.Sheets("CEDULA").Range("P171").Value
+    V98 = LibroCedula.Sheets("CEDULA").Range("P172").Value
+    V99 = LibroCedula.Sheets("CEDULA").Range("P173").Value
+    V100 = LibroCedula.Sheets("CEDULA").Range("P174").Value
+    V101 = LibroCedula.Sheets("CEDULA").Range("P175").Value
+    V102 = LibroCedula.Sheets("CEDULA").Range("P176").Value
+    V103 = LibroCedula.Sheets("CEDULA").Range("P177").Value
+    V104 = LibroCedula.Sheets("CEDULA").Range("P178").Value
+    V105 = LibroCedula.Sheets("CEDULA").Range("P179").Value
+    V106 = LibroCedula.Sheets("CEDULA").Range("P180").Value
+    V107 = LibroCedula.Sheets("CEDULA").Range("P182").Value
+    V108 = LibroCedula.Sheets("CEDULA").Range("P183").Value
+    V109 = LibroCedula.Sheets("CEDULA").Range("P184").Value
+    V110 = LibroCedula.Sheets("CEDULA").Range("P185").Value
+    V111 = LibroCedula.Sheets("CEDULA").Range("P186").Value
+    V112 = LibroCedula.Sheets("CEDULA").Range("P187").Value
+    V113 = LibroCedula.Sheets("CEDULA").Range("P188").Value
+    V114 = LibroCedula.Sheets("CEDULA").Range("P189").Value
+    V115 = LibroCedula.Sheets("CEDULA").Range("P190").Value
+    V116 = LibroCedula.Sheets("CEDULA").Range("P194").Value
+    
+        
+    Const UltimaFila As Long = 1048576
+    Set CeldaEncontrada = LibroOriginal.Worksheets(2).Range("B1:B" & UltimaFila).Find(What:=Num_Obra, _
+                                                                      LookIn:=xlValues, _
+                                                                      LookAt:=xlWhole, _
+                                                                      SearchOrder:=xlByRows, _
+                                                                      SearchDirection:=xlNext, _
+                                                                      MatchCase:=False)
+
+                                                                          
+        If Not CeldaEncontrada Is Nothing Then
+                FilaIndice = CeldaEncontrada.Row
+        Else
+            FilaIndice = UltimaFilaConDatos - 10
+            LibroOriginal.Worksheets(2).Cells(FilaIndice, 2).Value = Num_Obra
+        End If
+
+                                                                     
+         With LibroOriginal.Worksheets(2)
+                .Cells(FilaIndice, 1).Value = FilaIndice - 14
+                .Cells(FilaIndice, 3).Value = Residente_Obra
+                .Cells(FilaIndice, 4).Value = Nombre_Obra
+                .Cells(FilaIndice, 5).Value = Modalidad_Adj
+                .Cells(FilaIndice, 6).Value = Tipo_Contrato
+                .Cells(FilaIndice, 7).Value = Programa
+                .Cells(FilaIndice, 8).Value = Recurso_Fondo
+                .Cells(FilaIndice, 9).Value = Ejercicio_Anio
+                .Cells(FilaIndice, 10).Value = Num_Contrato
+                .Cells(FilaIndice, 11).Value = Contratista
+                .Cells(FilaIndice, 12).Value = Fecha
+                .Cells(FilaIndice, 13).Value = Representante
+                .Cells(FilaIndice, 14).Value = Monto_Contrato
+                .Cells(FilaIndice, 15).Value = Monto_Convenio
+                .Cells(FilaIndice, 16).Value = Monto_Total
+                .Cells(FilaIndice, 17).Value = Periodo_Ejecucion1 & " AL " & Periodo_Ejecucion2
+                .Cells(FilaIndice, 18).Value = Periodo_Diferido1 & " AL " & Periodo_Diferido2
+                .Cells(FilaIndice, 19).Value = Dias_Diferido
+                .Cells(FilaIndice, 20).Value = V1
+                .Cells(FilaIndice, 21).Value = V2
+                .Cells(FilaIndice, 22).Value = V3
+                .Cells(FilaIndice, 23).Value = V4
+                .Cells(FilaIndice, 24).Value = V5
+                .Cells(FilaIndice, 25).Value = V6
+                .Cells(FilaIndice, 26).Value = V7
+                .Cells(FilaIndice, 27).Value = V8
+                .Cells(FilaIndice, 28).Value = V9
+                .Cells(FilaIndice, 29).Value = V10
+                .Cells(FilaIndice, 30).Value = V11
+                .Cells(FilaIndice, 31).Value = V12
+                .Cells(FilaIndice, 32).Value = V13
+                .Cells(FilaIndice, 33).Value = V14
+                .Cells(FilaIndice, 34).Value = V15
+                .Cells(FilaIndice, 35).Value = V16
+                .Cells(FilaIndice, 36).Value = V17
+                .Cells(FilaIndice, 37).Value = V18
+                .Cells(FilaIndice, 38).Value = V19
+                .Cells(FilaIndice, 39).Value = V20
+                .Cells(FilaIndice, 40).Value = V21
+                .Cells(FilaIndice, 41).Value = V22
+                .Cells(FilaIndice, 42).Value = V23
+                .Cells(FilaIndice, 43).Value = V24
+                .Cells(FilaIndice, 44).Value = V25
+                .Cells(FilaIndice, 45).Value = V26
+                .Cells(FilaIndice, 46).Value = V27
+                .Cells(FilaIndice, 47).Value = V28
+                .Cells(FilaIndice, 48).Value = V29
+                .Cells(FilaIndice, 49).Value = V30
+                .Cells(FilaIndice, 50).Value = V31
+                .Cells(FilaIndice, 51).Value = V32
+                .Cells(FilaIndice, 52).Value = V33
+                .Cells(FilaIndice, 53).Value = V34
+                .Cells(FilaIndice, 54).Value = V35
+                .Cells(FilaIndice, 55).Value = V36
+                .Cells(FilaIndice, 56).Value = V37
+                .Cells(FilaIndice, 57).Value = V38
+                .Cells(FilaIndice, 58).Value = V39
+                .Cells(FilaIndice, 59).Value = V40
+                .Cells(FilaIndice, 60).Value = V41
+                .Cells(FilaIndice, 61).Value = V42
+                .Cells(FilaIndice, 62).Value = V43
+                .Cells(FilaIndice, 63).Value = V44
+                .Cells(FilaIndice, 64).Value = V45
+                .Cells(FilaIndice, 65).Value = V46
+                .Cells(FilaIndice, 66).Value = V47
+                .Cells(FilaIndice, 67).Value = V48
+                .Cells(FilaIndice, 68).Value = V49
+                .Cells(FilaIndice, 69).Value = V50
+                .Cells(FilaIndice, 70).Value = V51
+                .Cells(FilaIndice, 71).Value = V52
+                .Cells(FilaIndice, 72).Value = V53
+                .Cells(FilaIndice, 73).Value = V54
+                .Cells(FilaIndice, 74).Value = V55
+                .Cells(FilaIndice, 75).Value = V56
+                .Cells(FilaIndice, 76).Value = V57
+                .Cells(FilaIndice, 77).Value = V58
+                .Cells(FilaIndice, 78).Value = V59
+                .Cells(FilaIndice, 79).Value = V60
+                .Cells(FilaIndice, 80).Value = V61
+                .Cells(FilaIndice, 81).Value = V62
+                .Cells(FilaIndice, 82).Value = V63
+                .Cells(FilaIndice, 83).Value = V64
+                .Cells(FilaIndice, 84).Value = V65
+                .Cells(FilaIndice, 85).Value = V66
+                .Cells(FilaIndice, 86).Value = V67
+                .Cells(FilaIndice, 87).Value = V68
+                .Cells(FilaIndice, 88).Value = V69
+                .Cells(FilaIndice, 89).Value = V70
+                .Cells(FilaIndice, 90).Value = V71
+                .Cells(FilaIndice, 91).Value = V72
+                .Cells(FilaIndice, 92).Value = V73
+                .Cells(FilaIndice, 93).Value = V74
+                .Cells(FilaIndice, 94).Value = V75
+                .Cells(FilaIndice, 95).Value = V76
+                .Cells(FilaIndice, 96).Value = V77
+                .Cells(FilaIndice, 97).Value = V78
+                .Cells(FilaIndice, 98).Value = V79
+                .Cells(FilaIndice, 99).Value = V80
+                .Cells(FilaIndice, 100).Value = V81
+                .Cells(FilaIndice, 101).Value = V82
+                .Cells(FilaIndice, 102).Value = V83
+                .Cells(FilaIndice, 103).Value = V84
+                .Cells(FilaIndice, 104).Value = V85
+                .Cells(FilaIndice, 105).Value = V86
+                .Cells(FilaIndice, 106).Value = V87
+                .Cells(FilaIndice, 107).Value = V88
+                .Cells(FilaIndice, 108).Value = V89
+                .Cells(FilaIndice, 109).Value = V90
+                .Cells(FilaIndice, 110).Value = V91
+                .Cells(FilaIndice, 111).Value = V92
+                .Cells(FilaIndice, 112).Value = V93
+                .Cells(FilaIndice, 113).Value = V94
+                .Cells(FilaIndice, 114).Value = V95
+                .Cells(FilaIndice, 115).Value = V96
+                .Cells(FilaIndice, 116).Value = V97
+                .Cells(FilaIndice, 117).Value = V98
+                .Cells(FilaIndice, 118).Value = V99
+                .Cells(FilaIndice, 119).Value = V100
+                .Cells(FilaIndice, 120).Value = V101
+                .Cells(FilaIndice, 121).Value = V102
+                .Cells(FilaIndice, 122).Value = V103
+                .Cells(FilaIndice, 123).Value = V104
+                .Cells(FilaIndice, 124).Value = V105
+                .Cells(FilaIndice, 125).Value = V106
+                .Cells(FilaIndice, 126).Value = V107
+                .Cells(FilaIndice, 127).Value = V108
+                .Cells(FilaIndice, 128).Value = V109
+                .Cells(FilaIndice, 129).Value = V110
+                .Cells(FilaIndice, 130).Value = V111
+                .Cells(FilaIndice, 131).Value = V112
+                .Cells(FilaIndice, 132).Value = V113
+                .Cells(FilaIndice, 133).Value = V114
+                .Cells(FilaIndice, 134).Value = V115
+                .Cells(FilaIndice, 135).Value = V116
+
+'        OJOOO
+        If InStr(1, .Cells(FilaIndice, 18).Value, "SIN", vbTextCompare) > 0 Then
+            .Cells(FilaIndice, 18).Value = "SIN"
+        End If
+        If InStr(1, .Cells(FilaIndice, 19).Value, "SIN", vbTextCompare) > 0 Then
+            .Cells(FilaIndice, 19).Value = "SIN"
+        End If
+        
+        
+'        Corregirlo en el script Eufemia
+         If CeldaEncontrada Is Nothing Then
+            LibroOriginal.Worksheets(2).Rows(FilaIndice + 1).Insert Shift:=xlDown
+         End If
+         End With
+         
+         MsgBox "La cedula " & Num_Obra & " ha sido cargada con éxito", vbInformation, "Operación Exitosa"
+         LibroCedula.Close SaveChanges:=False
+         
+
+         
+                                                                        
+                                                                        
+    
+
+    
+     Else
+        MsgBox "No se encontró ningún archivo en la carpeta."
+    End If
+    
+    
+
+    
+Application.ScreenUpdating = True
+Application.Calculation = xlCalculationAutomatic
+Application.EnableEvents = True
+
+Exit Sub
+
+ErrorHandler:
+    Select Case Err.Number
+        Case 9, 1004 ' Errores comunes relacionados con rangos
+            MsgBox "Corroborar que la Matriz General este en la primera hoja del libro y que la cedula este en su debidamente llenada", _
+                   vbCritical, "Error de configuración"
+    End Select
+
+End Sub
+
